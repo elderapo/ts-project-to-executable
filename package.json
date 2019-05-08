@@ -1,0 +1,22 @@
+{
+  "name": "ts-project-to-executable",
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^12.0.0",
+    "@types/zeromq": "^4.6.2",
+    "@zeit/ncc": "^0.18.3",
+    "pkg": "^4.3.8",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5",
+    "zeromq": "^5.1.0"
+  },
+  "scripts": {
+    "start": "ts-node ./src/index.ts",
+    "ncc-build": "ncc build --minify --no-source-map-register ./src/index.ts -o ./ncc-build",
+    "pkg": "pkg --targets node10-linux-x64 --output ./build/uncompressed ./ncc-build/index.js",
+    "upx--": "rm -rf ./build/compressed && upx --overlay=copy -o ./build/compressed  ./build/uncompressed",
+    "compress": "gzexe ./build/uncompressed && mv ./build/uncompressed ./build/compressed && mv ./build/uncompressed~ ./build/uncompressed",
+    "full-build": "yarn ncc-build && yarn pkg && yarn compress"
+  }
+}
